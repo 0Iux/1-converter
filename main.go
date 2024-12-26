@@ -1,13 +1,9 @@
 package main
 
-import (
-	"fmt"
-)
-
 func main() {
 
-	var x bool
-
-	fmt.Printf("IMT: %v\n", x)
+	const usd_eur = 0.96
+	const usd_rub = 99.96
+	const eur_rub = usd_rub / usd_eur
 
 }
