@@ -2,12 +2,14 @@ package main
 
 import "fmt"
 
-const usd_eur = 0.96
-const eur_usd = 1 / usd_eur
-const usd_rub = 99.96
-const rub_usd = 1 / usd_rub
-const eur_rub = usd_rub / usd_eur
-const rub_eur = 1 / eur_rub
+var currency_map = map[string]float64{
+	"usd_eur": 0.96,
+	"eur_usd": 1 / usd_eur,
+	"usd_rub": 99.96,
+	"rub_usd": 1 / usd_rub,
+	"eur_rub": usd_rub / usd_eur,
+	"rub_eur": 1 / eur_rub,
+}
 
 func main() {
 	fmt.Println("\n---------------Калькулятор обменника---------------")
@@ -44,7 +46,7 @@ func get_user_input() (string, float64, string) {
 
 	for {
 		fmt.Println("Какая валюта у вас сейчас? (usd, rub, eur): ")
-		fmt.Scan((&start_currency))
+		fmt.Scan(&start_currency)
 		if start_currency != "usd" && start_currency != "rub" && start_currency != "eur" {
 			fmt.Println("Нет такого варианта!")
 			continue
@@ -54,7 +56,7 @@ func get_user_input() (string, float64, string) {
 
 	for {
 		fmt.Println("Сколько у вас этой валюты?: ")
-		fmt.Scan((&ammount))
+		fmt.Scan(&ammount)
 		if ammount <= 0 {
 			fmt.Println("Введенно некоректное число")
 			continue
@@ -64,7 +66,7 @@ func get_user_input() (string, float64, string) {
 
 	for {
 		fmt.Println("Какую валюту вы хотите получить? (usd, rub, eur):")
-		fmt.Scan((&need_currency))
+		fmt.Scan(&need_currency)
 		if need_currency == start_currency {
 			fmt.Println("Введена одинаковая валюта!")
 			continue
@@ -79,23 +81,6 @@ func get_user_input() (string, float64, string) {
 }
 
 func calculate_exchange(start_currency, need_currency string, ammount float64) float64 {
-	switch {
-	case start_currency == "rub":
-		if need_currency == "eur" {
-			return ammount * rub_eur
-		}
-		return ammount * rub_usd
-
-	case start_currency == "eur":
-		if need_currency == "rub" {
-			return ammount * eur_rub
-		}
-		return ammount * eur_usd
-
-	case start_currency == "usd":
-		if need_currency == "eur" {
-			return ammount * usd_eur
-		}
-	}
-	return ammount * usd_rub
+	need_value := start_currency + "_" + need_currency
+	return ammount * currency_map[need_value]
 }
